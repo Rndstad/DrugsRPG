@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DrugsRPG:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DrugsRPG_jar</output-path>
+    <root id="archive" name="DrugsRPG.jar">
+      <element id="module-output" name="DrugsRPG" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/stefvanschie/inventoryframework/IF/0.1.0/IF-0.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

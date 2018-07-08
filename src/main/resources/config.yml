@@ -1,0 +1,62 @@
+# DrugsRPG v1
+# The best and most customisable drugs plugin on the market.
+# Author: rndstad.me
+# Please leave a 5-star rating on the DrugsRPG spigot page.
+
+## Information ##
+# Material list of Spigot:
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+# Potion effects of Spigot:
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
+
+
+## Prefix ##
+# Write your custom global prefix for DrugsRPG.
+Prefix: '&9&lDrugsRPG &7›&f '
+
+
+## Drugs Setup ##
+# In this list are all your custom drug-types saved.
+Drugs:
+  Cocaine:
+      permission: 'drugsrpg.cocaine'
+      name: '&f&lCocaine'
+      message: '&fI feel high.'
+      lore: '&eThe fine coca.'
+      recipe:
+        product: SUGAR
+        rows:
+          '1': '@@@'
+          '2': '@#@'
+          '3': '@@@'
+        item:
+          '1': IRON_BLOCK
+          '2': IRON_BLOCK
+      effects:
+        BLINDNESS:
+          duration: 200
+          amplifier: 2
+        SLOW:
+          duration: 200
+          amplifier: 2
+  Weed:
+      permission: 'drugsrpg.weed'
+      name: '&e&lWeed'
+      message: '&fHmmmm, weed!'
+      lore: '&eSnoop Dogg is a good boy.'
+      recipe:
+        product: WHEAT
+        rows:
+          '1': '@#@'
+          '2': '@#@'
+          '3': '@#@'
+        item:
+          '1': IRON_BLOCK
+          '2': IRON_BLOCK
+      effects:
+        BLINDNESS:
+          duration: 200
+          amplifier: 2
+        SLOW:
+          duration: 200
+          amplifier: 2
