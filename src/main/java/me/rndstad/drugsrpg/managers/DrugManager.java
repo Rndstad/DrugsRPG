@@ -54,9 +54,6 @@ public class DrugManager {
 					 config.getConfig().getString("Drugs." + drug + ".recipe.rows.2"),
 					 config.getConfig().getString("Drugs." + drug + ".recipe.rows.3"));
 
-			// sr.setIngredient('@', Material.valueOf(config.getConfig().getString("Drugs." + drug + ".recipe.item.1")));
-			// sr.setIngredient('#', Material.valueOf(config.getConfig().getString("Drugs." + drug + ".recipe.item.2")));
-
 			for (String c : config.getConfig().getStringList("Drugs." + drug + ".recipe.ingredients")) {
 			    String[] chr = c.split(":");
 			    char key = chr[0].charAt(0);
