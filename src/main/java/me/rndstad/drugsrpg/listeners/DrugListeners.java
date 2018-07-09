@@ -18,11 +18,11 @@ import org.bukkit.potion.PotionEffectType;
 
 public class DrugListeners implements Listener {
 
-	private YAML_API config = Core.getInstance().getConfigData();
-	private Utils u = new Utils();
+    private YAML_API config = Core.getInstance().getConfigData();
+    private Utils u = new Utils();
 
-	@EventHandler
-	public void onClick(PlayerInteractEvent e) {
+    @EventHandler
+    public void onClick(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             for (String drug : config.getConfig().getConfigurationSection("Drugs").getKeys(false)) {

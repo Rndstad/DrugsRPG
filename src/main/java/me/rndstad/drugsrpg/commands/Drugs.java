@@ -21,11 +21,11 @@ public class Drugs implements CommandExecutor {
 				if(p.hasPermission("Drugs.Admin")) {
 					MenuManager.getInstance().getMenu().show(p);
 				} else {
-					p.sendMessage(StringUtils.format("&8&m-----------------------"));
-					p.sendMessage(StringUtils.format("&6&lDrugs &8- &7v1.15"));
-					p.sendMessage(StringUtils.format("&7Author: &fTostiTegen"));
-					p.sendMessage(StringUtils.format("&8&m-----------------------"));
-				}
+                    p.sendMessage(StringUtils.format("&8&m-----------------------"));
+                    p.sendMessage(StringUtils.format("&6&lDrugs &8- &7v1.15"));
+                    p.sendMessage(StringUtils.format("&7Author: &fTostiTegen"));
+                    p.sendMessage(StringUtils.format("&8&m-----------------------"));
+                }
 				return true;
 			}
 		}

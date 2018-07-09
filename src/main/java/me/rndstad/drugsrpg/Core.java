@@ -28,6 +28,10 @@ public class Core extends JavaPlugin {
 		pm.registerEvents(new DrugListeners(), this);
 
 		DrugManager.getInstance().init();
+
+		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		    // TODO: Coming soon
+		}
 	}
 	
 	public void onDisable() {
