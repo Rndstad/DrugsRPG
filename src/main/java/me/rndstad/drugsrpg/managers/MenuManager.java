@@ -12,6 +12,7 @@ import me.rndstad.drugsrpg.utils.Glow;
 import me.rndstad.drugsrpg.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -73,6 +74,7 @@ public class MenuManager {
                 Drug drug = DrugManager.getInstance().getDrug(event.getCurrentItem().getItemMeta().getDisplayName());
                 Player p = (Player) event.getWhoClicked();
                 p.getInventory().addItem(drug.getItemStack());
+                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             });
             pane.addItem(guiItem);
         }
