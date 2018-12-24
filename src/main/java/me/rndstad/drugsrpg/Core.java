@@ -1,5 +1,7 @@
 package me.rndstad.drugsrpg;
 
+import fr.minuskube.inv.InventoryManager;
+import me.rndstad.drugsrpg.api.DrugPlaceholder;
 import me.rndstad.drugsrpg.commands.Drugs;
 import me.rndstad.drugsrpg.managers.DrugManager;
 import me.rndstad.drugsrpg.listeners.DrugListeners;
@@ -14,12 +16,19 @@ public class Core extends JavaPlugin {
 	private static Core instance;
     private YAML_API config;
 
+    private InventoryManager invManager;
+
 	String prefix = getConfig().getString("Prefix");
 
 	public void onEnable() {
 		instance = this;
+
+		invManager = new InventoryManager(this);
+		invManager.init();
+
 		new Metrics(this);
 		new Utils().registerGlow();
+
 		config = new YAML_API(this, "config.yml", true);
 
 		getCommand("drugs").setExecutor(new Drugs());
@@ -29,9 +38,11 @@ public class Core extends JavaPlugin {
 
 		DrugManager.getInstance().init();
 
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-		    // TODO: Coming soon
-		}
+        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            System.out.println("[DrugsRPG] Hooking in to PlaceholderAPI...");
+            new DrugPlaceholder().register();
+            System.out.println("[DrugsRPG] Placeholder is registered!");
+        }
 	}
 	
 	public void onDisable() {
@@ -49,5 +60,9 @@ public class Core extends JavaPlugin {
 
     public YAML_API getConfigData() {
         return config;
+    }
+
+    public InventoryManager getInvManager() {
+        return invManager;
     }
 }
