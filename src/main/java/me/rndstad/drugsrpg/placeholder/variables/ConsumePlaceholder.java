@@ -1,11 +1,17 @@
-package me.rndstad.drugsrpg.api;
+package me.rndstad.drugsrpg.placeholder.variables;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.rndstad.drugsrpg.managers.DrugManager;
+import me.rndstad.drugsrpg.DrugsPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class DrugPlaceholder extends PlaceholderExpansion {
+public class ConsumePlaceholder extends PlaceholderExpansion {
+
+    private DrugsPlugin drugsrpg;
+
+    public ConsumePlaceholder(DrugsPlugin drugsrpg) {
+        this.drugsrpg = drugsrpg;
+    }
 
     public String getIdentifier() {
         return "drug";
@@ -30,8 +36,8 @@ public class DrugPlaceholder extends PlaceholderExpansion {
           */
         if(identifier.equalsIgnoreCase("in_hand")) {
             if (player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR) {
-                if (DrugManager.getInstance().getDrug(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()) != null) {
-                    return "You have " + DrugManager.getInstance().getDrug(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()).getName() + " in your hand.";
+                if (drugsrpg.getDrugsManager().getDrug(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()) != null) {
+                    return "You have " + drugsrpg.getDrugsManager().getDrug(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()).getName() + " in your hand.";
                 } else {
                     return "You don't have a drug in your hand.";
                 }
@@ -43,3 +49,4 @@ public class DrugPlaceholder extends PlaceholderExpansion {
         return null;
     }
 }
+

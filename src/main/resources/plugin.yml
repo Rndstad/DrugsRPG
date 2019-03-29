@@ -1,7 +1,7 @@
 name: DrugsRPG
 author: Randstad
 version: 2.2
-main: me.rndstad.drugsrpg.Core
+main: me.rndstad.drugsrpg.DrugsPlugin
 description: The best drugs plugin on the market, created by rndstad.me
 website: http://rndstad.me
 softdepend: [PlaceholderAPI]

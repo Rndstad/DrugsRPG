@@ -1,6 +1,6 @@
-package me.rndstad.drugsrpg.events;
+package me.rndstad.drugsrpg.consume.events;
 
-import me.rndstad.drugsrpg.objects.Drug;
+import me.rndstad.drugsrpg.consume.Drug;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
