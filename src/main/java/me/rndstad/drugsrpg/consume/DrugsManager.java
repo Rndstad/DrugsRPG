@@ -6,6 +6,7 @@ import me.rndstad.drugsrpg.common.tools.ChatUtils;
 import me.rndstad.drugsrpg.consume.listeners.ConsumeListeners;
 import me.rndstad.drugsrpg.database.enums.DatabaseQuery;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class DrugsManager extends Module {
 
@@ -30,9 +32,7 @@ public class DrugsManager extends Module {
         super("Drugs Manager");
         this.drugsrpg = drugsrpg;
 
-        // load all drugs
         if (drugsrpg.getDatabaseManager().use_mysql()) {
-            // TODO
             drugs = loadDrugs();
         } else {
             for (String drugName : drugsrpg.getDrugsFile().getConfig().getConfigurationSection("drugs").getKeys(false)) {
@@ -64,7 +64,7 @@ public class DrugsManager extends Module {
 
                 String message = ChatUtils.format(drugsrpg.getDrugsFile().getConfig().getString("drugs." + drugName + ".message"));
 
-                Drug drug = new Drug(drugsrpg, drugName, message, i, sr);
+                Drug drug = new Drug(drugsrpg, drugName, message, i, sr, true);
                 drugs.add(drug);
             }
         }
@@ -75,7 +75,7 @@ public class DrugsManager extends Module {
     public List<Drug> loadDrugs() {
         List<Drug> drugs = new ArrayList<>();
         try (Connection connection = drugsrpg.getDatabaseManager().getPool().getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_DRUG.toString());
+            PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_DRUGS.toString());
 
             ResultSet rs = statement.executeQuery();
 
@@ -112,7 +112,7 @@ public class DrugsManager extends Module {
                     }
                 }
 
-                drugs.add(new Drug(drugsrpg, drug, displayName, item, recipe));
+                drugs.add(new Drug(drugsrpg, drug, message, item, recipe, true));
             }
 
         } catch (SQLException e) {
@@ -121,21 +121,65 @@ public class DrugsManager extends Module {
         return drugs;
     }
 
+    public void saveDrugs() {
+        if (drugsrpg.getDatabaseManager().use_mysql()) {
+            for (Drug drug : drugs) {
+                if (drugsrpg.getDatabaseManager().isDrug(drug)) {
+                    drugsrpg.getDatabaseManager().updateDrug(DatabaseQuery.UPDATE_DRUG, drug);
+                    System.out.print("[DrugsRPG] Successfully updated drug to the MySQL database.");
+
+                } else {
+                    drugsrpg.getDatabaseManager().insertDrug(DatabaseQuery.INSERT_DRUG, drug);
+                    System.out.print("[DrugsRPG] Successfully inserted drug to the MySQL database.");
+                }
+            }
+        } else {
+            drugsrpg.getDrugsFile().getConfig().set("drugs", null);
+
+            for (Drug drug : drugs) {
+
+                drugsrpg.getDrugsFile().getConfig().createSection("drugs");
+                ConfigurationSection section = drugsrpg.getDrugsFile().getConfig().createSection("drugs." + drug.getName());
+
+                section.set("name", drug.getName());
+                section.set("message", drug.getMessage());
+                section.set("lore", drug.getItemStack().getItemMeta().getLore().get(0));
+                section.set("recipe.product", drug.getItemStack().getType().toString());
+                section.set("recipe.rows.1", drug.getRecipe().getShape()[0]);
+                section.set("recipe.rows.2", drug.getRecipe().getShape()[1]);
+                section.set("recipe.rows.3", drug.getRecipe().getShape()[2]);
+
+                List<String> ingredients = new ArrayList<>();
+                for (Map.Entry<Character, ItemStack> entry : drug.getRecipe().getIngredientMap().entrySet()) {
+                    ingredients.add(entry.getKey() + ":" + entry.getValue().getType() + ":" + entry.getValue().getType().getId());
+                }
+                section.set("ingredients", ingredients);
+
+                for (PotionEffect effect : drug.getPotionEffects()) {
+                    section.set("effects." + effect.getType().getName() + ".duration", effect.getDuration());
+                    section.set("effects." + effect.getType().getName() + ".amplifier", effect.getAmplifier());
+                }
+            }
+            drugsrpg.getDrugsFile().saveConfig();
+        }
+    }
+
     public List<ItemStack> toDrugIcons() {
         List<ItemStack> drugsConverted = new ArrayList<>();
         for (Drug drug : drugs) {
             ItemStack drugItem = new ItemStack(drug.getItemStack());
             ItemMeta meta = drugItem.getItemMeta();
-            meta.setDisplayName(ChatUtils.format("&f&l" + drug.getName()));
 
             List<String> lores = new ArrayList<>();
-            lores.add(ChatUtils.format("&dRecipe:"));
-            lores.addAll(Arrays.asList(drug.getRecipe().getShape()));
-            lores.add(" ");
+            String[] shape = drug.getRecipe().getShape();
+            lores.add(ChatUtils.format("&dRecipe: &7" + shape[0] + ", " + shape[1] + ", " + shape[2]));
             lores.add(ChatUtils.format("&dEffects:"));
             for (PotionEffect potion : drug.getPotionEffects()) {
                 lores.add(ChatUtils.format("&7- " + potion.getType().getName()));
             }
+            lores.add(" ");
+            lores.add(ChatUtils.format("&aLeft-click&7 to get the drug."));
+            lores.add(ChatUtils.format("&cRight-click&7 to remove drug."));
             meta.setLore(lores);
 
             drugItem.setItemMeta(meta);
@@ -145,9 +189,13 @@ public class DrugsManager extends Module {
         return drugsConverted;
     }
 
+    public List<Drug> getDrugs() {
+        return drugs;
+    }
+
     public Drug getDrug(String name) {
         for (Drug drug : drugs) {
-            if (drug.getName().equalsIgnoreCase(name)) {
+            if (drug.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(name)) {
                 return drug;
             }
         }

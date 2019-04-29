@@ -40,10 +40,9 @@ public class DrugsPlugin extends JavaPlugin {
         builderManager = new BuilderManager(this);
 
 
-        getCommand("drugs").setExecutor(new DrugsCommand());
+        getCommand("drugs").setExecutor(new DrugsCommand(this));
 
         metrics = new Metrics(this);
-        // Support for flatfile & mysql
 
         invManager.init();
 
@@ -51,8 +50,12 @@ public class DrugsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (databaseManager.getPool().isClosed()) {
-            databaseManager.getPool().close();
+        drugsManager.saveDrugs();
+
+        if (databaseManager.use_mysql()) {
+            if (databaseManager.getPool().isClosed()) {
+                databaseManager.getPool().close();
+            }
         }
     }
 

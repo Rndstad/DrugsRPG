@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/DrugsRPG_jar</output-path>
     <root id="archive" name="DrugsRPG.jar">
       <element id="module-output" name="DrugsRPG" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/fr/minuskube/inv/smart-invs/1.2.5/smart-invs-1.2.5.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/zaxxer/HikariCP/2.6.0/HikariCP-2.6.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/zaxxer/HikariCP/2.6.0/HikariCP-2.6.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/fr/minuskube/inv/smart-invs/1.2.5/smart-invs-1.2.5.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -4,16 +4,10 @@
 # Potion effects of Spigot:
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
 
-## Prefix ##
-# Write your custom global prefix for DrugsRPG.
-prefix: '&9&lDrugsRPG &7›&f '
-
-
 ## Drugs Setup ##
 # In this list are all your custom drug-types saved.
 drugs:
   Cocaine:
-      permission: 'drugsrpg.cocaine'
       name: '&f&lCocaine'
       message: '&fI feel high.'
       lore: '&eThe fine coca.'
@@ -40,7 +34,6 @@ drugs:
           duration: 200
           amplifier: 2
   Weed:
-      permission: 'drugsrpg.weed'
       name: '&e&lWeed'
       message: '&fHmmmm, weed!'
       lore: '&eSnoop Dogg is a good boy.'

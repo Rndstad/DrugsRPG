@@ -14,9 +14,13 @@ public enum DatabaseQuery {
             ")"),
 
 
-    SELECT_DRUG("SELECT * FROM drugsrpg_drugs;"),
+    SELECT_DRUGS("SELECT * FROM drugsrpg_drugs"),
+
+    SELECT_DRUG("SELECT * FROM drugsrpg_drugs WHERE drug = ?;"),
 
     INSERT_DRUG("INSERT INTO drugsrpg_drugs (drug, displayName, message, lore, product, rows, ingredients, effects) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"),
+
+    UPDATE_DRUG("UPDATE drugsrpg_drugs SET displayName=?, message=?, lore=?, rows=?, ingredients=?, effects=? WHERE drug=?"),
 
     UPDATE_DRUG_DISPLAYNAME("UPDATE drugsrpg_drugs SET displayName=? WHERE drug=?"),
 
@@ -30,7 +34,7 @@ public enum DatabaseQuery {
 
     UPDATE_DRUG_EFFECTS("UPDATE drugsrpg_drugs SET effects=? WHERE drug=?"),
 
-    DELETE_DRUG("DELETE drugsrpg_drugs WHERE drug=?;");
+    DELETE_DRUG("DELETE FROM drugsrpg_drugs WHERE drug=?;");
 
     private String query;
 

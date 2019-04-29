@@ -14,5 +14,5 @@ public enum DrugInfo {
     INGREDIENTS,
 
     // EFFECT PART
-    EFFECTS;
+    POTION_EFFECTS;
 }

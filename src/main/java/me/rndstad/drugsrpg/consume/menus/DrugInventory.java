@@ -8,6 +8,8 @@ import fr.minuskube.inv.content.Pagination;
 import fr.minuskube.inv.content.SlotIterator;
 import me.rndstad.drugsrpg.DrugsPlugin;
 import me.rndstad.drugsrpg.common.tools.ChatUtils;
+import me.rndstad.drugsrpg.consume.Drug;
+import me.rndstad.drugsrpg.database.enums.DatabaseQuery;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +40,26 @@ public class DrugInventory implements InventoryProvider {
 
         for (int i = 0; i < items.length; i++) {
             ItemStack drug = drugs.get(i);
-            items[i] = ClickableItem.of(drug, e -> e.getWhoClicked().getInventory().addItem(drugsrpg.getDrugsManager().getDrug(drug.getItemMeta().getDisplayName()).getItemStack()));
+            items[i] = ClickableItem.of(drug, e -> {
+                if (e.getClick().isLeftClick()) {
+                    e.getWhoClicked().getInventory().addItem(drugsrpg.getDrugsManager().getDrug(drug.getItemMeta().getDisplayName()).getItemStack());
+                } else if (e.getClick().isRightClick()) {
+                    if (drugsrpg.getDatabaseManager().use_mysql()) {
+                        Drug drugraw = drugsrpg.getDrugsManager().getDrug(drug.getItemMeta().getDisplayName());
+                        player.sendMessage(ChatUtils.format("&aYou have successfully removed &7" + drugraw.getName() + "&a!"));
+                        drugsrpg.getDatabaseManager().deleteDrug(DatabaseQuery.DELETE_DRUG, drugraw);
+                        drugsrpg.getDrugsManager().getDrugs().remove(drugraw);
+                        e.getWhoClicked().closeInventory();
+                    } else {
+                        Drug drugraw = drugsrpg.getDrugsManager().getDrug(drug.getItemMeta().getDisplayName());
+                        player.sendMessage(ChatUtils.format("&aYou have successfully removed &7" + drugraw.getName() + "&a!"));
+                        drugsrpg.getDrugsManager().getDrugs().remove(drugraw);
+                        e.getWhoClicked().closeInventory();
+                    }
+                } else {
+                    e.setCancelled(true);
+                }
+            });
         }
 
         pagination.setItems(items);

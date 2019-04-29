@@ -6,6 +6,7 @@ import me.rndstad.drugsrpg.builder.enums.DrugInfo;
 import me.rndstad.drugsrpg.builder.menus.BuilderInventory;
 import me.rndstad.drugsrpg.common.tools.ChatUtils;
 import me.rndstad.drugsrpg.consume.Drug;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,8 +16,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BuilderListeners implements Listener {
 
@@ -100,16 +105,56 @@ public class BuilderListeners implements Listener {
                 } else {
                     ShapedRecipe recipe = new ShapedRecipe(drug.getItemStack());
                     recipe.shape(shape[0], shape[1], shape[2]);
+                    drug.setRecipe(recipe);
+
+                    StringBuilder rows = new StringBuilder();
+                    String[] original = drug.getRecipe().getShape();
+                    rows.append(original[0]).append("/").append(original[1]).append("/").append(original[2]);
+                    System.out.print("recipe: " + rows.toString());
 
                     bm.updateDrug(p.getUniqueId(), drug);
                     bm.updateInfo(p.getUniqueId(), DrugInfo.INGREDIENTS);
                     e.setCancelled(true);
                     p.sendMessage(ChatUtils.format("&aYou have set the rows to &e" + e.getMessage() + "&a."));
-                    p.sendMessage(ChatUtils.format("&aExcellent. You have to enter the ingredients now."));
+                    p.sendMessage(ChatUtils.format("&aExcellent. You have to enter the ingredients now. Example: @:IRON_BLOCK:0/#:INK_SACK:3"));
 
                 }
             } else if (bm.getChatMap().get(p.getUniqueId()) == DrugInfo.INGREDIENTS) {
-                
+                Drug drug = bm.getBuildedDrug(p.getUniqueId());
+                String[] ingredient = e.getMessage().split("/");
+                ShapedRecipe recipe = drug.getRecipe();
+
+                Bukkit.getServer().getScheduler().runTask(drugsrpg, () -> {
+                    for (String i : ingredient) {
+                        String[] split = i.split(":");
+                        recipe.setIngredient(split[0].charAt(0), Material.getMaterial(split[1]));
+                    }
+                });
+
+                drug.setRecipe(recipe);
+                bm.updateDrug(p.getUniqueId(), drug);
+                bm.getChatMap().remove(p.getUniqueId());
+                e.setCancelled(true);
+                p.sendMessage(ChatUtils.format("&aYou have succesfully configured the crafting part."));
+                BuilderInventory.INVENTORY.open(p);
+            } else if (bm.getChatMap().get(p.getUniqueId()) == DrugInfo.POTION_EFFECTS) {
+                Drug drug = bm.getBuildedDrug(p.getUniqueId());
+                String[] effects = e.getMessage().split("/");
+                List<PotionEffect> potionEffectList = new ArrayList<>();
+
+                for (String effect : effects) {
+                    String[] split = effect.split(":");
+                    System.out.printf("[0]: " + split[0]);
+                    System.out.printf("Potion: " + PotionEffectType.getByName(split[0]).toString());
+                    potionEffectList.add(new PotionEffect(PotionEffectType.getByName(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2])));
+                }
+
+                drug.setPotionEffects(potionEffectList);
+                bm.updateDrug(p.getUniqueId(), drug);
+                bm.getChatMap().remove(p.getUniqueId());
+                e.setCancelled(true);
+                p.sendMessage(ChatUtils.format("&aYou have succesfully configured the effects part."));
+                BuilderInventory.INVENTORY.open(p);
             }
         }
     }
