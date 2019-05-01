@@ -36,19 +36,21 @@ public class DrugsCommand implements CommandExecutor {
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("give")) {
-                    String targetName = args[1];
-                    Player target = Bukkit.getPlayer(targetName);
-                    if (target != null) {
-                        String drugName = args[2];
-                        Drug drug = drugsrpg.getDrugsManager().getDrug(drugName);
-                        if (drug != null) {
-                            target.getInventory().addItem(drug.getItemStack());
-                            player.sendMessage(ChatUtils.format("&aYou gave " + drug.getName() + " to " + target.getName() + "."));
+                    if (player.hasPermission("drugsrpg." + args[0]) || player.hasPermission("drugsrpg.*")) {
+                        String targetName = args[1];
+                        Player target = Bukkit.getPlayer(targetName);
+                        if (target != null) {
+                            String drugName = args[2];
+                            Drug drug = drugsrpg.getDrugsManager().getDrug(drugName);
+                            if (drug != null) {
+                                target.getInventory().addItem(drug.getItemStack());
+                                player.sendMessage(ChatUtils.format("&aYou gave " + drug.getName() + " to " + target.getName() + "."));
+                            } else {
+                                player.sendMessage(ChatUtils.format("&aThis drug isn't found in the database."));
+                            }
                         } else {
-                            player.sendMessage(ChatUtils.format("&aThis drug isn't found in the database."));
+                            player.sendMessage(ChatUtils.format("&aThis player isn't found in the server."));
                         }
-                    } else {
-                        player.sendMessage(ChatUtils.format("&aThis player isn't found in the server."));
                     }
                 }
             }
