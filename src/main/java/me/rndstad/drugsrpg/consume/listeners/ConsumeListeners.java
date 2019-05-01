@@ -26,16 +26,18 @@ public class ConsumeListeners implements Listener {
         Player player = e.getPlayer();
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             for (Drug drug : drugsrpg.getDrugsManager().getDrugs()) {
-                if (player.getInventory().getItemInMainHand().getItemMeta().equals(drug.getItemStack().getItemMeta())) {
-                    if (player.hasPermission("drugsrpg." + ChatColor.stripColor(drug.getName()))) {
-                        DrugConsumeEvent consumeEvent = new DrugConsumeEvent(drug, player);
-                        Bukkit.getPluginManager().callEvent(consumeEvent);
+                if (player.getInventory().getItemInMainHand().getType() == drug.getItemStack().getType()) {
+                    if (player.getInventory().getItemInMainHand().getItemMeta().equals(drug.getItemStack().getItemMeta())) {
+                        if (player.hasPermission("drugsrpg." + ChatColor.stripColor(drug.getName()))) {
+                            DrugConsumeEvent consumeEvent = new DrugConsumeEvent(drug, player);
+                            Bukkit.getPluginManager().callEvent(consumeEvent);
 
-                        if (!consumeEvent.isCancelled()) {
-                            e.setCancelled(true);
-                            InventoryUtils.removeItem(player.getInventory(), drug.getItemStack().getType(), 1);
-                            player.sendMessage(ChatUtils.format(drug.getMessage()));
-                            player.addPotionEffects(drug.getPotionEffects());
+                            if (!consumeEvent.isCancelled()) {
+                                e.setCancelled(true);
+                                InventoryUtils.removeItem(player.getInventory(), drug.getItemStack().getType(), 1);
+                                player.sendMessage(ChatUtils.format(drug.getMessage()));
+                                player.addPotionEffects(drug.getPotionEffects());
+                            }
                         }
                     }
                 }
