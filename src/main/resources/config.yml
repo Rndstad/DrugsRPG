@@ -10,3 +10,5 @@ preferences:
   database: drugsrpg_drugs
   username: ""
   password: ""
+
+check-for-updates: true

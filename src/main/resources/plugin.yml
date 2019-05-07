@@ -1,10 +1,9 @@
 name: DrugsRPG
 author: Randstad
-version: 3.3.1
+version: 3.4
 main: me.rndstad.drugsrpg.DrugsPlugin
 description: The best drugs plugin on the market, created by rndstad.me
 website: http://rndstad.me
 softdepend: [PlaceholderAPI]
 commands:
    drugs:
-   
