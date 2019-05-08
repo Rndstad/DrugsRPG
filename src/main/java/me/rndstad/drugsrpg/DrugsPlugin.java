@@ -33,11 +33,11 @@ public class DrugsPlugin extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
 
-        currentVersion = getDescription().getVersion();
-        checkUpdates();
-
         config = new YamlConfig(this, "config.yml", true);
         if (!config.getConfig().getBoolean("preferences.use-mysql")) drugs = new YamlConfig(this, "drugs.yml", true);
+
+        currentVersion = getDescription().getVersion();
+        checkUpdates();
 
         databaseManager = new DatabaseManager(this, config, drugs);
         invManager = new InventoryManager(this);
@@ -75,7 +75,7 @@ public class DrugsPlugin extends JavaPlugin {
             @Override
             public void run() {
                 String latestVersion = VersionUtils.getLatestSpigotVersion("39887");
-                if (latestVersion == "error") {
+                if (latestVersion.equals("error")) {
                     getLogger().info("[DrugsRPG] Error attempting to check for new version. Make sure you report this problem here: https://www.spigotmc.org/threads/drugsrpg-flatfile-mysql-support-added-1-8-1-12-2.235099/");
                 } else {
                     if (!currentVersion.equals(latestVersion)) {
